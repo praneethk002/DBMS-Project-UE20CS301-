@@ -1,0 +1,92 @@
+CREATE DATABASE TRAVEL
+USE TRAVEL
+
+-- 1.  Table Creation
+    -- 1. VEHICLE
+        CREATE TABLE VEHICLE (VID INT (5) NOT NULL, VNAME VARCHAR(20) NULL, CAPACITY INT(3) NULL, TYPE VARCHAR(15) NULL, 
+        REGNO VARCHAR(15) 
+    -- 2. EMPLOYEE
+        CREATE TABLE  TRAVEL.EMPLOYEE (EID INT(3) NOT NULL, ENAME VARCHAR(20) NULL, EADDRESS VARCHAR(25) NULL, 
+        EPHONE INT(10) NULL EJDATE DATE NULL);
+    -- 3. TRIP
+        CREATE TABLE  TRIP (TID INT (3) NOT NULL, SOURCE VARCHAR (20) NULL, DEST VARCHAR (25) NULL, SDATE VARCHAR (45) NULL);
+    -- 4. CUSTOMER
+        CREATE TABLE CUSTOMER (CID INT NOT NULL, CNAME VARCHAR (20) NULL, CADDRESS VARCHAR (25) NULL, CPHONE INT(10)des
+    -- 5. BOOKED_FOR
+        CREATE TABLE BOOKED_FOR(CID INT(5) NOT NULL, VID INT(5) NOT NULL, TID INT(5) NOT NULL, BDATE DATE NULL);
+    -- 6. DRIVEN_BY
+        CREATE TABLE DRIVEN_BY(EID INT(3) NOT NULL, VID INT(3) NOT NULL, TID INT(3) NOT NULL, DDATE DATE NULL);
+    -- 7. PAYMENT
+        CREATE TABLE PAYMENT(TID INT(5) NOT NULL, CID INT(5) NOT NULL,DISTANCE_TRAVEL INT(6) NULL, PDATE DATE NULL, 
+        AMOUNT DECIMAL(6) NULL);
+
+
+-- 1.  CONSTRAINTS
+    -- 1. VEHICLE
+          ALTER TABLE VEHICLE ADD CONSTRAINT CPK_VID  PRIMARY KEY (VID); 
+    -- 2. EMPLOYEE
+         ALTER TABLE EMPLOYEE ADD CONSTRAINT CPK_EID  PRIMARY KEY (EID);
+    -- 3. TRIP
+         ALTER TABLE TRIP ADD CONSTRAINT CPK_TID  PRIMARY KEY (TID);
+    -- 4. CUSTOMER
+
+    -- 1. DRIVEN_BY
+        alter table driven_by add constraint cpk1 foreign key(eid) references employee(eid) on delete cascade on update cascade;
+        alter table driven_by add constraint cpk2 foreign key(vid) references vehicle(vid) on delete cascade on update cascade;
+        alter table driven_by add constraint cpk3 foreign key(tid) references trip(tid) on delete cascade on update cascade;
+    -- 2. BOOKED_FOR
+        alter table BOOKED_FOR add constraint BFK1 foreign key(cid) references customer(cid) on delete cascade on update cascade;
+        alter table BOOKED_FOR add constraint BFK2 foreign key(tid) references trip(tid) on delete cascade on update cascade;
+        alter table BOOKED_FOR add constraint BFK3 foreign key(vid) references vehicle(vid) on delete cascade on update cascade;
+    -- 3. PAYMENT
+        alter table PAYMENT add constraint PFK1 foreign key(cid) references customer(cid) on delete cascade on update cascade;
+        alter table PAYMENT add constraint PFK3 foreign key(tid) references trip(tid) on delete cascade on update cascade;
+
+
+
+
+
+
+
+
+
+
+
+
+-- INSERT
+-- * BOOKED_FOR
+insert into booked_for(cid,vid,tid,bdate) values('4002','2002','3002','2-11-22');
+
+insert into booked_for(cid,vid,tid,bdate) values('4001','2001','3001','2-11-22');
+
+-- * DRIVEN_BY
+insert into driven_by(EID,VID,TID,DDATE) values('1001','2001','3001','2-11-22');
+
+insert into driven_by(EID,VID,TID,DDATE) values('1002','2002','3002','3-11-22');
+
+-- * Payment
+ INSERT INTO Payment(TID,CID,DISTANCE_TRAVEL,PDATE,AMOUNT) VALUES('3002','4002','35','3-11-22','427’);
+ INSERT INTO Payment(TID,CID,DISTANCE_TRAVEL,PDATE,AMOUNT) VALUES('3001','4001','23','2-11-22','322’);
+
+
+-- * Customer
+INSERT INTO CUSTOMER (CID,CNAME,CADDRESS,CPHONE)VALUES('4001','RAM','ITPL','897179988');
+
+INSERT INTO CUSTOMER (CID,CNAME,CADDRESS,CPHONE)VALUES('4002','RAVI','ECITY','887179988');
+-- * Employee
+INSERT INTO EMPLOYEE (EID,ENAME,EADDRESS,EPHONE,EJDATE)VALUES('1001','RAJ','ITPL','897179988','2-11-22');
+
+INSERT INTO EMPLOYEE (EID,ENAME,EPHONE,EADDRESS,EJDATE)VALUES('1002','NAMAN','89765432','BENGALURU','23-10-22');
+-- * Vehicle
+INSERT INTO VEHICLE(VID,VNAME,CAPACITY,TYPE, REGNO)VALUES('2001','DZIRE','4','SEDAN','KA05MP2200');
+
+INSERT INTO VEHICLE(VID,VNAME,CAPACITY,TYPE, REGNO)VALUES('2002','ERTIGA','7','SUV','KA0MA2100');
+-- * Trip
+INSERT INTO TRIP(TID,SOURCE,DEST,SDATE)VALUES('3001','ITPL','PESEC','2-11-22');
+
+INSERT INTO TRIP(TID,SOURCE,DEST,SDATE)VALUES('3002','PESEC','PESRR','3-11-22');
+
+
+SELECT TRIP.SOURCE,TRIP.DEST, TRIP.SDATE, PAYMENT.AMOUNT, PAYMENT.DISTANCE_TRAVEL FROM TRIP INNER JOIN ON PAYMENT TRIP.TID = PAYMENT.TID;
+
+select trip.source,trip.dest,payment.distance_travel,payment.amount from payment INNER JOIN trip ON trip.TID = PAYMENT.TID;
